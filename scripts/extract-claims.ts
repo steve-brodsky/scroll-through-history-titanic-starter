@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import OpenAI from "openai";
@@ -194,35 +195,23 @@ const claimSchema = {
 } as const;
 
 async function main() {
-  const sourceManifestPath =
-    process.argv[2] ??
-    "data/sources/british-inquiry-assistance.json";
+  const episodeManifestPath = process.argv[2];
+  const segmentManifestPath = process.argv[3];
+  const explicitOutputPath = process.argv[4];
 
-  const outputPath =
-    process.argv[3] ??
-    "data/generated/extracted-claims.json";
-
-  console.log(
-    `Reading source manifest: ${sourceManifestPath}`
-  );
-
-  const sourceManifestText = await fs.readFile(
-    sourceManifestPath,
-    "utf8"
-  );
-
-  const sourceManifest = JSON.parse(
-    sourceManifestText
-  );
-
-  if (!sourceManifest.episode_id) {
+  if (!episodeManifestPath || !segmentManifestPath) {
     throw new Error(
-      `Source manifest ${sourceManifestPath} does not contain an episode_id.`
+      [
+        "Usage:",
+        "",
+        "npm run extract:claims -- <episode-manifest> <segment-manifest> [output-path]",
+        "",
+        "Example:",
+        "",
+        "npm run extract:claims -- data/episodes/titanic-1912.json data/source-segments/british-inquiry-assistance/assistance-001.json",
+      ].join("\n")
     );
   }
-
-  const episodeManifestPath =
-    `data/episodes/${sourceManifest.episode_id}.json`;
 
   console.log(
     `Reading episode manifest: ${episodeManifestPath}`
@@ -237,18 +226,97 @@ async function main() {
     episodeManifestText
   );
 
-  if (!sourceManifest.source_note_path) {
+  if (!episodeManifest.id) {
     throw new Error(
-      `Source manifest ${sourceManifestPath} does not contain a source_note_path.`
+      `Episode manifest ${episodeManifestPath} does not contain an id.`
     );
   }
 
   console.log(
-    `Reading source material: ${sourceManifest.source_note_path}`
+    `Reading source segment manifest: ${segmentManifestPath}`
+  );
+
+  const segmentManifestText = await fs.readFile(
+    segmentManifestPath,
+    "utf8"
+  );
+
+  const segmentManifest = JSON.parse(
+    segmentManifestText
+  );
+
+  if (!segmentManifest.source_id) {
+    throw new Error(
+      `Source segment manifest ${segmentManifestPath} does not contain a source_id.`
+    );
+  }
+
+  if (!segmentManifest.segment_key) {
+    throw new Error(
+      `Source segment manifest ${segmentManifestPath} does not contain a segment_key.`
+    );
+  }
+
+  if (!segmentManifest.content_path) {
+    throw new Error(
+      `Source segment manifest ${segmentManifestPath} does not contain a content_path.`
+    );
+  }
+
+  const sourceManifestPath =
+    `data/sources/${segmentManifest.source_id}.json`;
+
+  console.log(
+    `Reading source manifest: ${sourceManifestPath}`
+  );
+
+  const sourceManifestText = await fs.readFile(
+    sourceManifestPath,
+    "utf8"
+  );
+
+  const sourceManifest = JSON.parse(
+    sourceManifestText
+  );
+
+  if (!sourceManifest.id) {
+    throw new Error(
+      `Source manifest ${sourceManifestPath} does not contain an id.`
+    );
+  }
+
+  if (sourceManifest.id !== segmentManifest.source_id) {
+    throw new Error(
+      `Source manifest id ${sourceManifest.id} does not match source segment source_id ${segmentManifest.source_id}.`
+    );
+  }
+
+  if (
+    Array.isArray(episodeManifest.source_ids) &&
+    !episodeManifest.source_ids.includes(sourceManifest.id)
+  ) {
+    throw new Error(
+      `Episode manifest ${episodeManifestPath} does not list source ${sourceManifest.id}.`
+    );
+  }
+
+  const outputPath =
+    explicitOutputPath ??
+    path.join(
+      "data",
+      "generated",
+      "claims",
+      episodeManifest.id,
+      sourceManifest.id,
+      `${segmentManifest.segment_key}.json`
+    );
+
+  console.log(
+    `Reading source material: ${segmentManifest.content_path}`
   );
 
   const sourceText = await fs.readFile(
-    sourceManifest.source_note_path,
+    segmentManifest.content_path,
     "utf8"
   );
 
@@ -262,6 +330,28 @@ async function main() {
     apiKey: process.env.OPENAI_API_KEY,
   });
 
+  const modelName =
+    process.env.OPENAI_EXTRACTION_MODEL ??
+    "gpt-5.6-terra";
+
+  const sourceMetadata = {
+    ...sourceManifest,
+
+    segment: {
+      id: segmentManifest.id,
+      segment_key: segmentManifest.segment_key,
+      title: segmentManifest.title ?? null,
+      locator: segmentManifest.locator ?? null,
+      sequence_index:
+        segmentManifest.sequence_index ?? null,
+      content_status:
+        segmentManifest.content_status ?? null,
+      temporal_context:
+        segmentManifest.temporal_context ?? {},
+      notes: segmentManifest.notes ?? null,
+    },
+  };
+
   const extractionInput = `
 EPISODE CONTEXT:
 
@@ -269,7 +359,7 @@ ${JSON.stringify(episodeManifest, null, 2)}
 
 SOURCE METADATA:
 
-${JSON.stringify(sourceManifest, null, 2)}
+${JSON.stringify(sourceMetadata, null, 2)}
 
 SOURCE MATERIAL:
 
@@ -280,18 +370,16 @@ ${sourceText}
     "Extracting atomic historical claims..."
   );
 
+  // Scroll Through History
+  // Historical Claim Extractor v1.0
+  //
+  // This prompt is intentionally episode-agnostic.
+  // Episode/source-specific information must be supplied through
+  // EPISODE CONTEXT, SOURCE METADATA, and SOURCE MATERIAL.
+  //
+  // Do not add episode-specific extraction rules here.
   const response = await openai.responses.create({
-    model:
-      process.env.OPENAI_EXTRACTION_MODEL ??
-      "gpt-5.6-terra",
-// Scroll Through History
-// Historical Claim Extractor v1.0
-//
-// This prompt is intentionally episode-agnostic.
-// Episode/source-specific information must be supplied through
-// EPISODE CONTEXT, SOURCE METADATA, and SOURCE MATERIAL.
-//
-// Do not add episode-specific extraction rules here.
+    model: modelName,
     instructions: `
 You are the historical claim-extraction stage for Scroll Through History.
 
@@ -1164,6 +1252,96 @@ Extract faithful, atomic historical claims only.
     response.output_text
   );
 
+  const extractorVersion =
+    "claim-extractor-v1.0";
+
+  const claimsWithProvenance =
+    parsed.claims.map(
+      (claim: any, index: number) => {
+        const extractionKeyInput =
+          JSON.stringify({
+            episode_id:
+              episodeManifest.id,
+
+            source_id:
+              sourceManifest.id,
+
+            source_segment_key:
+              segmentManifest.segment_key,
+
+            statement:
+              claim.statement,
+
+            claim_type:
+              claim.claim_type,
+
+            temporal:
+              claim.temporal,
+
+            evidence:
+              claim.evidence,
+          });
+
+        const extractionHash =
+          createHash("sha256")
+            .update(extractionKeyInput)
+            .digest("hex");
+
+        return {
+          candidate_id:
+            `claim_${extractionHash.slice(0, 24)}`,
+
+          extraction_index: index,
+
+          ...claim,
+        };
+      }
+    );
+
+  const output = {
+    format_version: "1.0",
+
+    provenance: {
+      extractor_version:
+        extractorVersion,
+
+      extraction_model:
+        modelName,
+
+      extracted_at:
+        new Date().toISOString(),
+
+      episode_id:
+        episodeManifest.id,
+
+      source_id:
+        sourceManifest.id,
+
+      source_segment_id:
+        segmentManifest.id,
+
+      source_segment_key:
+        segmentManifest.segment_key,
+
+      episode_manifest_path:
+        episodeManifestPath,
+
+      source_manifest_path:
+        sourceManifestPath,
+
+      segment_manifest_path:
+        segmentManifestPath,
+
+      content_path:
+        segmentManifest.content_path,
+
+      content_status:
+        segmentManifest.content_status ?? null,
+    },
+
+    claims: claimsWithProvenance,
+  };
+
   await fs.mkdir(
     path.dirname(outputPath),
     {
@@ -1173,7 +1351,7 @@ Extract faithful, atomic historical claims only.
 
   await fs.writeFile(
     outputPath,
-    JSON.stringify(parsed, null, 2) + "\n"
+    JSON.stringify(output, null, 2) + "\n"
   );
 
   console.log("");

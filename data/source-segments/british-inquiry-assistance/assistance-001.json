@@ -1,0 +1,27 @@
+{
+  "id": "british-inquiry-assistance-assistance-001",
+
+  "source_id": "british-inquiry-assistance",
+
+  "segment_key": "assistance-001",
+
+  "title": "Means taken to procure assistance — development segment",
+
+  "locator": "Report section: Means taken to procure assistance",
+
+  "sequence_index": 1,
+
+  "content_path": "data/source-notes/british-inquiry-assistance.md",
+
+  "content_status": "development_paraphrase",
+
+  "temporal_context": {
+    "date_context": "1912-04-15",
+    "calendar_system": "gregorian",
+    "clock_system": null,
+    "normalization_status": "partial",
+    "notes": "This segment concerns distress communications during the early hours of April 15, 1912. Clock basis remains unresolved."
+  },
+
+  "notes": "Temporary development segment using the existing paraphrased source note. Replace with material derived directly from the historical source before production."
+}

@@ -3,6 +3,11 @@
   "title": "Titanic: The Maiden Voyage",
   "description": "The maiden voyage and sinking of RMS Titanic in April 1912.",
 
+  "source_ids": [
+    "british-inquiry-assistance",
+    "us-inquiry-evans"
+  ],
+
   "temporal_context": {
     "start": "1912-04-10",
     "end": "1912-04-18",

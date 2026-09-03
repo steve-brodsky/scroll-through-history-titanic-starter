@@ -1,23 +1,19 @@
 {
   "id": "british-inquiry-assistance",
-  "episode_id": "titanic-1912",
 
   "title": "British Wreck Commissioner's Inquiry — Means taken to procure assistance",
 
-  "source_note_path": "data/source-notes/british-inquiry-assistance.md",
-
   "source_type": "inquiry_report",
+
   "is_primary": true,
 
   "url": "https://www.titanicinquiry.org/BOTInq/BOTReport/botRepAssist.php",
 
-  "temporal_context": {
-    "date_context": "1912-04-15",
+  "citation": "British Wreck Commissioner's Inquiry, Report: Means taken to procure assistance.",
+
+  "default_temporal_context": {
     "calendar_system": "gregorian",
-    "clock_basis": "source_unspecified",
-
-    "normalization_status": "partial",
-
-    "notes": "The source reports clock times associated with events during the Titanic disaster. Preserve times exactly as reported. Do not assume a UTC offset or convert them until the clock basis has been historically verified."
+    "clock_system": null,
+    "notes": "Preserve historical times as reported. Do not assume a timezone, UTC offset, or clock system unless established by source material or segment metadata."
   }
 }

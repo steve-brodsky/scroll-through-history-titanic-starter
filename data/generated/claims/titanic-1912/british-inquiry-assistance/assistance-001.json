@@ -1,0 +1,261 @@
+{
+  "format_version": "1.0",
+  "provenance": {
+    "extractor_version": "claim-extractor-v1.0",
+    "extraction_model": "gpt-5.6-terra",
+    "extracted_at": "2026-09-03T22:15:01.395Z",
+    "episode_id": "titanic-1912",
+    "source_id": "british-inquiry-assistance",
+    "source_segment_id": "british-inquiry-assistance-assistance-001",
+    "source_segment_key": "assistance-001",
+    "episode_manifest_path": "data/episodes/titanic-1912.json",
+    "source_manifest_path": "data/sources/british-inquiry-assistance.json",
+    "segment_manifest_path": "data/source-segments/british-inquiry-assistance/assistance-001.json",
+    "content_path": "data/source-notes/british-inquiry-assistance.md",
+    "content_status": "development_paraphrase"
+  },
+  "claims": [
+    {
+      "candidate_id": "claim_1170175e0587ff0205b68b22",
+      "extraction_index": 0,
+      "statement": "Once Titanic's dangerous condition was understood, Captain Smith ordered messages sent to ships within wireless range.",
+      "claim_type": "action",
+      "temporal": {
+        "raw_text": "Once Titanic's dangerous condition was understood",
+        "kind": "relative",
+        "relation": "after",
+        "granularity": "unknown",
+        "certainty": "exact",
+        "calendar_system": "Gregorian calendar",
+        "calendar_system_status": "contextual",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": "Titanic's dangerous condition was understood"
+      },
+      "location_text": null,
+      "named_entities": [
+        "Titanic",
+        "Captain Smith"
+      ],
+      "evidence": [
+        "Once Titanic's dangerous condition was understood, Captain Smith ordered messages sent to ships within wireless range."
+      ],
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes that Titanic's dangerous condition was understood, but does not identify who understood it or establish wider knowledge."
+    },
+    {
+      "candidate_id": "claim_c9f053c3043e7ff1a3e3ae7d",
+      "extraction_index": 1,
+      "statement": "A CQD distress signal was transmitted at approximately 12:15 a.m.",
+      "claim_type": "communication",
+      "temporal": {
+        "raw_text": "at approximately 12:15 a.m.",
+        "kind": "clock_time",
+        "relation": "at",
+        "granularity": "minute",
+        "certainty": "approximate",
+        "calendar_system": "Gregorian calendar",
+        "calendar_system_status": "contextual",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": null
+      },
+      "location_text": null,
+      "named_entities": [],
+      "evidence": [
+        "A CQD distress signal was transmitted at approximately 12:15 a.m."
+      ],
+      "confidence": 0.99,
+      "knowledge_notes": "The source establishes transmission of the signal; it does not establish which recipients received or understood it."
+    },
+    {
+      "candidate_id": "claim_4335699d3edb492258a5a374",
+      "extraction_index": 2,
+      "statement": "By approximately 12:25 a.m., Titanic had a corrected position.",
+      "claim_type": "condition",
+      "temporal": {
+        "raw_text": "By approximately 12:25 a.m.",
+        "kind": "clock_time",
+        "relation": "by",
+        "granularity": "minute",
+        "certainty": "approximate",
+        "calendar_system": "Gregorian calendar",
+        "calendar_system_status": "contextual",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": null
+      },
+      "location_text": null,
+      "named_entities": [
+        "Titanic"
+      ],
+      "evidence": [
+        "By approximately 12:25 a.m., Titanic had a corrected position."
+      ],
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes that Titanic had a corrected position by this time; it does not identify who possessed or received the position."
+    },
+    {
+      "candidate_id": "claim_2ad2378aad87cc305ca9fa52",
+      "extraction_index": 3,
+      "statement": "By approximately 12:25 a.m., Titanic transmitted that it had struck an iceberg.",
+      "claim_type": "communication",
+      "temporal": {
+        "raw_text": "By approximately 12:25 a.m.",
+        "kind": "clock_time",
+        "relation": "by",
+        "granularity": "minute",
+        "certainty": "approximate",
+        "calendar_system": "Gregorian calendar",
+        "calendar_system_status": "contextual",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": null
+      },
+      "location_text": null,
+      "named_entities": [
+        "Titanic"
+      ],
+      "evidence": [
+        "By approximately 12:25 a.m., Titanic had a corrected position and transmitted that it had struck an iceberg and required immediate assistance."
+      ],
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes that Titanic transmitted this report; it does not independently establish recipient receipt or wider knowledge."
+    },
+    {
+      "candidate_id": "claim_a9f22e7ded7e5818b21e8acd",
+      "extraction_index": 4,
+      "statement": "By approximately 12:25 a.m., Titanic transmitted that it required immediate assistance.",
+      "claim_type": "communication",
+      "temporal": {
+        "raw_text": "By approximately 12:25 a.m.",
+        "kind": "clock_time",
+        "relation": "by",
+        "granularity": "minute",
+        "certainty": "approximate",
+        "calendar_system": "Gregorian calendar",
+        "calendar_system_status": "contextual",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": null
+      },
+      "location_text": null,
+      "named_entities": [
+        "Titanic"
+      ],
+      "evidence": [
+        "By approximately 12:25 a.m., Titanic had a corrected position and transmitted that it had struck an iceberg and required immediate assistance."
+      ],
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes that Titanic transmitted this request; it does not independently establish recipient receipt or wider knowledge."
+    },
+    {
+      "candidate_id": "claim_6645f788ebffae4d46d5b59e",
+      "extraction_index": 5,
+      "statement": "Carpathia received the call.",
+      "claim_type": "communication",
+      "temporal": {
+        "raw_text": null,
+        "kind": "unknown",
+        "relation": "none",
+        "granularity": "unknown",
+        "certainty": "unknown",
+        "calendar_system": null,
+        "calendar_system_status": "unknown",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": null
+      },
+      "location_text": null,
+      "named_entities": [
+        "Carpathia"
+      ],
+      "evidence": [
+        "Carpathia received the call and replied that she was coming."
+      ],
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes that Carpathia received the call; it does not establish who aboard Carpathia received or understood it."
+    },
+    {
+      "candidate_id": "claim_6367701459a11316c470b4bb",
+      "extraction_index": 6,
+      "statement": "Carpathia replied that she was coming.",
+      "claim_type": "communication",
+      "temporal": {
+        "raw_text": null,
+        "kind": "sequence",
+        "relation": "after",
+        "granularity": "sequence",
+        "certainty": "inferred",
+        "calendar_system": null,
+        "calendar_system_status": "unknown",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": "Carpathia received the call"
+      },
+      "location_text": null,
+      "named_entities": [
+        "Carpathia"
+      ],
+      "evidence": [
+        "Carpathia received the call and replied that she was coming."
+      ],
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes that Carpathia sent this reply; it does not establish who received or understood it."
+    },
+    {
+      "candidate_id": "claim_18c8f3996adbdc82a79476ca",
+      "extraction_index": 7,
+      "statement": "At approximately 12:26 a.m., Titanic transmitted that the ship was sinking.",
+      "claim_type": "communication",
+      "temporal": {
+        "raw_text": "At approximately 12:26 a.m.",
+        "kind": "clock_time",
+        "relation": "at",
+        "granularity": "minute",
+        "certainty": "approximate",
+        "calendar_system": "Gregorian calendar",
+        "calendar_system_status": "contextual",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": null
+      },
+      "location_text": null,
+      "named_entities": [
+        "Titanic"
+      ],
+      "evidence": [
+        "At approximately 12:26 a.m., Titanic transmitted that the ship was sinking and that escaping steam was interfering with wireless reception."
+      ],
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes that Titanic transmitted this report; it does not independently establish recipient receipt or wider knowledge."
+    },
+    {
+      "candidate_id": "claim_98d9a6b009c0a1350fd41857",
+      "extraction_index": 8,
+      "statement": "At approximately 12:26 a.m., Titanic transmitted that escaping steam was interfering with wireless reception.",
+      "claim_type": "communication",
+      "temporal": {
+        "raw_text": "At approximately 12:26 a.m.",
+        "kind": "clock_time",
+        "relation": "at",
+        "granularity": "minute",
+        "certainty": "approximate",
+        "calendar_system": "Gregorian calendar",
+        "calendar_system_status": "contextual",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": null
+      },
+      "location_text": null,
+      "named_entities": [
+        "Titanic"
+      ],
+      "evidence": [
+        "At approximately 12:26 a.m., Titanic transmitted that the ship was sinking and that escaping steam was interfering with wireless reception."
+      ],
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes that Titanic transmitted this report; it does not independently establish recipient receipt or wider knowledge."
+    }
+  ]
+}
