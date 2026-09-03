@@ -1,0 +1,16 @@
+{
+  "id": "titanic-1912",
+  "title": "Titanic: The Maiden Voyage",
+  "description": "The maiden voyage and sinking of RMS Titanic in April 1912.",
+
+  "temporal_context": {
+    "start": "1912-04-10",
+    "end": "1912-04-18",
+    "default_calendar_system": "gregorian",
+    "notes": "Historical source times may use shipboard or otherwise source-specific clock conventions. Do not assume a timezone or normalize clock times unless source metadata establishes the basis."
+  },
+
+  "geographic_context": {
+    "description": "Southampton, Cherbourg, Queenstown, and the North Atlantic"
+  }
+}

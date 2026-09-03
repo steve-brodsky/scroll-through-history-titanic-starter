@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "extract:claims": "tsx scripts/extract-claims.ts",
     "extract:events": "tsx scripts/extract-events.ts"
   },
   "dependencies": {
