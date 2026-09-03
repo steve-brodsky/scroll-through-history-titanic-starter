@@ -8,12 +8,15 @@ config({ path: ".env.local" });
 const claimSchema = {
   type: "object",
   additionalProperties: false,
+
   properties: {
     claims: {
       type: "array",
+
       items: {
         type: "object",
         additionalProperties: false,
+
         properties: {
           statement: {
             type: "string",
@@ -99,11 +102,24 @@ const claimSchema = {
                 ],
               },
 
-              reference_system: {
+              calendar_system: {
                 type: ["string", "null"],
               },
 
-              reference_system_status: {
+              calendar_system_status: {
+                type: "string",
+                enum: [
+                  "explicit",
+                  "contextual",
+                  "unknown",
+                ],
+              },
+
+              clock_system: {
+                type: ["string", "null"],
+              },
+
+              clock_system_status: {
                 type: "string",
                 enum: [
                   "explicit",
@@ -123,8 +139,10 @@ const claimSchema = {
               "relation",
               "granularity",
               "certainty",
-              "reference_system",
-              "reference_system_status",
+              "calendar_system",
+              "calendar_system_status",
+              "clock_system",
+              "clock_system_status",
               "anchor_text",
             ],
           },
@@ -177,39 +195,47 @@ const claimSchema = {
 
 async function main() {
   const sourceManifestPath =
-  process.argv[2] ??
-  "data/sources/british-inquiry-assistance.json";
+    process.argv[2] ??
+    "data/sources/british-inquiry-assistance.json";
 
   const outputPath =
     process.argv[3] ??
     "data/generated/extracted-claims.json";
 
-  console.log(`Reading source manifest: ${sourceManifestPath}`);
+  console.log(
+    `Reading source manifest: ${sourceManifestPath}`
+  );
 
   const sourceManifestText = await fs.readFile(
     sourceManifestPath,
     "utf8"
   );
 
-  const sourceManifest = JSON.parse(sourceManifestText);
+  const sourceManifest = JSON.parse(
+    sourceManifestText
+  );
 
   if (!sourceManifest.episode_id) {
-  throw new Error(
-    `Source manifest ${sourceManifestPath} does not contain an episode_id.`
-  );
+    throw new Error(
+      `Source manifest ${sourceManifestPath} does not contain an episode_id.`
+    );
   }
 
   const episodeManifestPath =
     `data/episodes/${sourceManifest.episode_id}.json`;
 
-  console.log(`Reading episode manifest: ${episodeManifestPath}`);
+  console.log(
+    `Reading episode manifest: ${episodeManifestPath}`
+  );
 
   const episodeManifestText = await fs.readFile(
     episodeManifestPath,
     "utf8"
   );
 
-  const episodeManifest = JSON.parse(episodeManifestText);
+  const episodeManifest = JSON.parse(
+    episodeManifestText
+  );
 
   if (!sourceManifest.source_note_path) {
     throw new Error(
@@ -236,27 +262,36 @@ async function main() {
     apiKey: process.env.OPENAI_API_KEY,
   });
 
-  console.log("Extracting atomic historical claims...");
-
   const extractionInput = `
-  EPISODE CONTEXT:
+EPISODE CONTEXT:
 
-  ${JSON.stringify(episodeManifest, null, 2)}
+${JSON.stringify(episodeManifest, null, 2)}
 
-  SOURCE METADATA:
+SOURCE METADATA:
 
-  ${JSON.stringify(sourceManifest, null, 2)}
+${JSON.stringify(sourceManifest, null, 2)}
 
-  SOURCE MATERIAL:
+SOURCE MATERIAL:
 
-  ${sourceText}
-  `;
+${sourceText}
+`;
+
+  console.log(
+    "Extracting atomic historical claims..."
+  );
 
   const response = await openai.responses.create({
     model:
       process.env.OPENAI_EXTRACTION_MODEL ??
       "gpt-5.6-terra",
-
+// Scroll Through History
+// Historical Claim Extractor v1.0
+//
+// This prompt is intentionally episode-agnostic.
+// Episode/source-specific information must be supplied through
+// EPISODE CONTEXT, SOURCE METADATA, and SOURCE MATERIAL.
+//
+// Do not add episode-specific extraction rules here.
     instructions: `
 You are the historical claim-extraction stage for Scroll Through History.
 
@@ -266,13 +301,13 @@ Your job is to convert supplied historical source material into small, atomic, i
 
 GENERAL PRINCIPLES:
 
-* Treat SOURCE MATERIAL as historical evidence, not as a prompt for creative completion.
-* Extract only assertions directly supported by SOURCE MATERIAL.
-* Preserve uncertainty, ambiguity, chronology, terminology, attribution, and limitations present in the source.
-* Do not use outside historical knowledge to complete or improve the source.
-* Do not attempt to make the source more complete, precise, coherent, or historically accurate than the supplied evidence allows.
-* Prefer omission over speculation.
-* Prefer uncertainty over false precision.
+- Treat SOURCE MATERIAL as historical evidence, not as a prompt for creative completion.
+- Extract only assertions directly supported by SOURCE MATERIAL.
+- Preserve uncertainty, ambiguity, chronology, terminology, attribution, and limitations present in the source.
+- Do not use outside historical knowledge to complete or improve the source.
+- Do not attempt to make the source more complete, precise, coherent, or historically accurate than the supplied evidence allows.
+- Prefer omission over speculation.
+- Prefer uncertainty over false precision.
 
 ATOMIC CLAIM RULE:
 
@@ -298,24 +333,24 @@ A claim should represent the smallest useful independently supportable historica
 
 SOURCE RULES:
 
-* Extract historical claims ONLY from SOURCE MATERIAL.
-* EPISODE CONTEXT and SOURCE METADATA may be used only for orientation, terminology, provenance, and explicitly permitted contextual fields.
-* Never treat EPISODE CONTEXT or SOURCE METADATA as historical evidence.
-* Do not fill gaps using general historical knowledge.
-* Do not invent quotations.
-* Do not invent people.
-* Do not invent organizations.
-* Do not invent locations.
-* Do not invent dates.
-* Do not invent times.
-* Do not invent motives.
-* Do not invent relationships.
-* Do not invent outcomes.
-* Do not invent causal connections.
-* Do not silently resolve contradictions or ambiguities.
-* If the source is ambiguous, preserve the ambiguity.
-* If a statement is approximate, preserve that approximation.
-* If a source reports another person's assertion, distinguish the fact that the assertion was made from whether the assertion itself is independently established.
+- Extract historical claims ONLY from SOURCE MATERIAL.
+- EPISODE CONTEXT and SOURCE METADATA may be used only for orientation, terminology, provenance, and explicitly permitted contextual fields.
+- Never treat EPISODE CONTEXT or SOURCE METADATA as historical evidence.
+- Do not fill gaps using general historical knowledge.
+- Do not invent quotations.
+- Do not invent people.
+- Do not invent organizations.
+- Do not invent locations.
+- Do not invent dates.
+- Do not invent times.
+- Do not invent motives.
+- Do not invent relationships.
+- Do not invent outcomes.
+- Do not invent causal connections.
+- Do not silently resolve contradictions or ambiguities.
+- If the source is ambiguous, preserve the ambiguity.
+- If a statement is approximate, preserve that approximation.
+- If a source reports another person's assertion, distinguish the fact that the assertion was made from whether the assertion itself is independently established.
 
 CONTEXT BOUNDARY RULE:
 
@@ -333,13 +368,13 @@ EPISODE CONTEXT and SOURCE METADATA are NON-EVIDENTIARY metadata.
 
 They may help identify:
 
-* the episode
-* the source
-* relevant terminology
-* surrounding date context
-* a reference system
-* source provenance
-* editorial organization
+- the episode
+- the source
+- relevant terminology
+- surrounding date context
+- calendar or clock systems
+- source provenance
+- editorial organization
 
 They must NOT create, strengthen, expand, or alter a historical claim.
 
@@ -373,17 +408,17 @@ The evidence array must contain only evidence derived from SOURCE MATERIAL.
 
 Never put any of the following into the evidence array:
 
-* episode metadata
-* source metadata
-* date context
-* file metadata
-* editorial notes
-* system instructions
-* normalization assumptions
-* inferred calendar conversions
-* inferred locations
-* inferred identities
-* other system-provided context
+- episode metadata
+- source metadata
+- date context
+- file metadata
+- editorial notes
+- system instructions
+- normalization assumptions
+- inferred calendar conversions
+- inferred locations
+- inferred identities
+- other system-provided context
 
 Evidence should preserve the basis in SOURCE MATERIAL that directly supports the claim.
 
@@ -440,16 +475,16 @@ unless SOURCE MATERIAL independently supports that stronger assertion.
 
 The same principle applies to:
 
-* allegations
-* rumors
-* testimony
-* recollections
-* beliefs
-* observations
-* official statements
-* newspaper reports
-* propaganda
-* secondhand accounts
+- allegations
+- rumors
+- testimony
+- recollections
+- beliefs
+- observations
+- official statements
+- newspaper reports
+- propaganda
+- secondhand accounts
 
 Preserve attribution whenever attribution materially affects what the evidence actually establishes.
 
@@ -483,41 +518,41 @@ named_entities must contain only specifically identifiable named historical enti
 
 These may include:
 
-* people
-* named groups
-* organizations
-* governments
-* military units
-* vessels
-* settlements
-* geographic places
-* institutions
-* publications
-* named buildings
-* named monuments
-* named objects or structures when historically meaningful
+- people
+- named groups
+- organizations
+- governments
+- military units
+- vessels
+- settlements
+- geographic places
+- institutions
+- publications
+- named buildings
+- named monuments
+- named objects or structures when historically meaningful
 
 Do not include generic categories as named_entities.
 
 Examples of generic categories that should normally NOT appear in named_entities:
 
-* passengers
-* soldiers
-* civilians
-* nearby ships
-* workers
-* villagers
-* crew members
-* witnesses
-* officials
-* residents
-* troops
+- passengers
+- soldiers
+- civilians
+- nearby ships
+- workers
+- villagers
+- crew members
+- witnesses
+- officials
+- residents
+- troops
 
 Preserve entity names as represented by SOURCE MATERIAL.
 
 Do not replace, expand, modernize, translate, canonicalize, or resolve entity names using EPISODE CONTEXT or SOURCE METADATA.
 
-Examples:
+Example:
 
 If SOURCE MATERIAL says:
 
@@ -547,14 +582,16 @@ Do not force historical time expressions into modern timestamps.
 
 The temporal object contains:
 
-* raw_text
-* kind
-* relation
-* granularity
-* certainty
-* reference_system
-* reference_system_status
-* anchor_text
+- raw_text
+- kind
+- relation
+- granularity
+- certainty
+- calendar_system
+- calendar_system_status
+- clock_system
+- clock_system_status
+- anchor_text
 
 raw_text:
 
@@ -616,14 +653,14 @@ Use the relationship actually supported by SOURCE MATERIAL.
 
 Allowed values:
 
-* at
-* before
-* after
-* by
-* during
-* between
-* until
-* none
+- at
+- before
+- after
+- by
+- during
+- between
+- until
+- none
 
 granularity:
 
@@ -631,17 +668,17 @@ Describe the finest temporal resolution supported by SOURCE MATERIAL.
 
 Allowed values:
 
-* second
-* minute
-* hour
-* day
-* month
-* season
-* year
-* decade
-* century
-* sequence
-* unknown
+- second
+- minute
+- hour
+- day
+- month
+- season
+- year
+- decade
+- century
+- sequence
+- unknown
 
 certainty:
 
@@ -653,14 +690,14 @@ approximate
 
 Use when SOURCE MATERIAL uses wording such as:
 
-* approximately
-* about
-* circa
-* roughly
-* around
-* nearly
-* shortly before
-* shortly after
+- approximately
+- about
+- circa
+- roughly
+- around
+- nearly
+- shortly before
+- shortly after
 
 or equivalent uncertainty.
 
@@ -676,49 +713,84 @@ unknown
 
 Use when temporal certainty cannot be determined.
 
-reference_system:
+CALENDAR AND CLOCK SYSTEM RULES:
 
-Record a named clock system, calendar system, dating convention, regnal system, era, or other temporal reference system ONLY when it is established by SOURCE MATERIAL or explicitly supplied SOURCE METADATA.
+Calendar systems and clock/time-reference systems are separate concepts.
+
+calendar_system:
+
+Record the calendar or dating system applicable to the temporal expression ONLY when it is established by SOURCE MATERIAL or explicitly supplied SOURCE METADATA.
+
+Examples may include:
+
+- Gregorian calendar
+- Julian calendar
+- French Republican calendar
+- Roman Republican calendar
+- regnal dating
+- consular dating
 
 Otherwise return null.
 
-Examples could include, when actually supported:
-
-* Gregorian calendar
-* Julian calendar
-* GMT
-* local civil time
-* regnal year
-* Olympiad dating
-* consular dating
-
-Do not assume a modern calendar or clock system.
-
-reference_system_status:
+calendar_system_status:
 
 explicit
 
-Use when SOURCE MATERIAL explicitly identifies the reference system.
+Use when SOURCE MATERIAL explicitly establishes the calendar system.
 
 contextual
 
-Use when SOURCE METADATA explicitly establishes the reference system.
+Use when SOURCE METADATA explicitly establishes the calendar system.
 
 unknown
 
-Use when the reference system is not established.
+Use when the calendar system is not established.
+
+clock_system:
+
+Record the clock, time standard, or time-reference system applicable to the temporal expression ONLY when established by SOURCE MATERIAL or explicitly supplied SOURCE METADATA.
+
+Examples may include:
+
+- GMT
+- UTC
+- local civil time
+- ship time
+- mission elapsed time
+- railway time
+- military time standard
+
+Otherwise return null.
+
+clock_system_status:
+
+explicit
+
+Use when SOURCE MATERIAL explicitly establishes the clock or time-reference system.
+
+contextual
+
+Use when SOURCE METADATA explicitly establishes the clock or time-reference system.
+
+unknown
+
+Use when the clock or time-reference system is not established.
 
 IMPORTANT:
 
-A calendar or clock reference system supplied only by SOURCE METADATA must NOT change:
+Knowing the calendar system does NOT establish the clock system.
 
-* the claim statement
-* raw_text
-* kind
-* relation
-* granularity
-* certainty
-* anchor_text
+Knowing the clock system does NOT establish the calendar system.
+
+Contextual calendar or clock information must NOT alter:
+
+- the claim statement
+- raw_text
+- kind
+- relation
+- granularity
+- certainty
+- anchor_text
 
 Example:
 
@@ -729,21 +801,33 @@ SOURCE MATERIAL:
 SOURCE METADATA:
 
 calendar_system = Gregorian
+clock_basis = source_unspecified
 
-The claim may record:
-
-reference_system = "Gregorian calendar"
-reference_system_status = "contextual"
-
-But it must remain:
+Correct:
 
 kind = "clock_time"
 
-It must NOT become:
+calendar_system = "Gregorian calendar"
+
+calendar_system_status = "contextual"
+
+clock_system = null
+
+clock_system_status = "unknown"
+
+Incorrect:
 
 kind = "datetime"
 
-and the claim statement must NOT gain a calendar date.
+Incorrect:
+
+claim statement gains a calendar date.
+
+Incorrect:
+
+clock_system = "ship time"
+
+unless SOURCE MATERIAL or SOURCE METADATA actually establishes ship time.
 
 A separate temporal-normalization stage will later combine historical temporal expressions with contextual metadata.
 
@@ -781,16 +865,16 @@ anchor_text:
 
 Never invent:
 
-* modern calendar conversions
-* exact dates
-* time zones
-* UTC offsets
-* clock systems
-* calendar systems
-* durations
-* temporal anchors
+- modern calendar conversions
+- exact dates
+- time zones
+- UTC offsets
+- clock systems
+- calendar systems
+- durations
+- temporal anchors
 
-unless supported by SOURCE MATERIAL or explicitly permitted for reference_system through SOURCE METADATA.
+unless supported by SOURCE MATERIAL or explicitly permitted through SOURCE METADATA for calendar_system or clock_system.
 
 TEMPORAL CONTEXT RULE:
 
@@ -802,11 +886,17 @@ Do not add a date from SOURCE METADATA to the claim statement.
 
 Do not add SOURCE METADATA to the evidence array.
 
-SOURCE METADATA may populate reference_system only when it explicitly establishes that reference system.
+SOURCE METADATA may populate calendar_system only when it explicitly establishes a calendar system.
 
 When that occurs:
 
-reference_system_status = "contextual"
+calendar_system_status = "contextual"
+
+SOURCE METADATA may populate clock_system only when it explicitly establishes a clock or time-reference system.
+
+When that occurs:
+
+clock_system_status = "contextual"
 
 A separate normalization stage will later combine source temporal expressions with source metadata.
 
@@ -856,14 +946,14 @@ Do not speculate about who probably, likely, or reasonably knew something.
 
 Distinguish where relevant between:
 
-* producing information
-* observing information
-* receiving information
-* understanding information
-* believing information
-* acting on information
-* transmitting information
-* wider dissemination
+- producing information
+- observing information
+- receiving information
+- understanding information
+- believing information
+- acting on information
+- transmitting information
+- wider dissemination
 
 Example:
 
@@ -893,14 +983,14 @@ Do NOT automatically infer:
 
 For communications, observations, decisions, and reports, preserve the difference between:
 
-* direct participants
-* observers
-* senders
-* recipients
-* officials or decision-makers
-* surrounding populations
-* distant populations
-* later historians or investigators
+- direct participants
+- observers
+- senders
+- recipients
+- officials or decision-makers
+- surrounding populations
+- distant populations
+- later historians or investigators
 
 Do not assume information spread instantly.
 
@@ -910,11 +1000,11 @@ If SOURCE MATERIAL does not establish a useful knowledge relationship, knowledge
 
 LOCATION RULE:
 
-Record location_text only when SOURCE MATERIAL supports a meaningful location.
+Record location_text only when SOURCE MATERIAL supports a meaningful physical or geographic location.
 
 Preserve useful uncertainty.
 
-Examples:
+Examples of valid locations include:
 
 "near the northern gate"
 
@@ -928,14 +1018,38 @@ Examples:
 
 Do not replace historical descriptions with:
 
-* modern coordinates
-* modern place names
-* modern borders
-* modern administrative divisions
+- modern coordinates
+- modern place names
+- modern borders
+- modern administrative divisions
 
 unless those are explicitly present in SOURCE MATERIAL.
 
 Do not use EPISODE CONTEXT or SOURCE METADATA to silently make location_text more precise.
+
+Do NOT treat communication range, audience, jurisdiction, direction, organizational scope, command relationships, or relational phrases as physical locations.
+
+Examples that are NOT locations by themselves:
+
+"within wireless range"
+
+"within hearing distance"
+
+"under his command"
+
+"among the population"
+
+"toward the enemy"
+
+"within the organization"
+
+"to nearby ships"
+
+"among the troops"
+
+If SOURCE MATERIAL contains one of these phrases but does not establish a physical or geographic location for the claim, return:
+
+location_text = null
 
 CONFLICT RULE:
 
@@ -947,15 +1061,15 @@ Do not choose one version merely because it appears more plausible.
 
 Do not silently reconcile conflicting:
 
-* times
-* dates
-* identities
-* casualty numbers
-* locations
-* motivations
-* sequences
-* descriptions
-* outcomes
+- times
+- dates
+- identities
+- casualty numbers
+- locations
+- motivations
+- sequences
+- descriptions
+- outcomes
 
 A later historical-synthesis stage will compare sources, provenance, chronology, credibility, and conflicting evidence.
 
@@ -965,21 +1079,21 @@ confidence measures how strongly SOURCE MATERIAL supports the extracted claim.
 
 confidence is NOT:
 
-* a judgment about whether the historical event absolutely happened
-* a general historical-consensus score
-* a source-credibility score
-* a probability that the claim is objectively true
+- a judgment about whether the historical event absolutely happened
+- a general historical-consensus score
+- a source-credibility score
+- a probability that the claim is objectively true
 
 High confidence means SOURCE MATERIAL clearly and directly supports the extracted claim.
 
 Lower confidence means the source wording is:
 
-* ambiguous
-* indirect
-* incomplete
-* interpretive
-* qualified
-* uncertain
+- ambiguous
+- indirect
+- incomplete
+- interpretive
+- qualified
+- uncertain
 
 When evidence is too weak to support a useful atomic claim, omit the claim rather than assigning an artificially low confidence score.
 
@@ -995,19 +1109,19 @@ Prefer several clearly supported atomic claims over one polished narrative state
 
 Preserve the distinction between:
 
-* what happened
-* what was reported
-* what was alleged
-* what was observed
-* what was believed
-* what was remembered
-* what was known
-* who knew it
-* when it was known
-* what was communicated
-* what was received
-* what was inferred
-* what SOURCE MATERIAL actually establishes
+- what happened
+- what was reported
+- what was alleged
+- what was observed
+- what was believed
+- what was remembered
+- what was known
+- who knew it
+- when it was known
+- what was communicated
+- what was received
+- what was inferred
+- what SOURCE MATERIAL actually establishes
 
 Your output will become part of a larger historical data pipeline.
 
@@ -1026,7 +1140,6 @@ Do not normalize historical dates or times.
 Do not resolve contradictions.
 
 Extract faithful, atomic historical claims only.
-
 `,
 
     input: extractionInput,
@@ -1047,11 +1160,15 @@ Extract faithful, atomic historical claims only.
     );
   }
 
-  const parsed = JSON.parse(response.output_text);
+  const parsed = JSON.parse(
+    response.output_text
+  );
 
   await fs.mkdir(
     path.dirname(outputPath),
-    { recursive: true }
+    {
+      recursive: true,
+    }
   );
 
   await fs.writeFile(
@@ -1063,12 +1180,16 @@ Extract faithful, atomic historical claims only.
   console.log(
     `✓ Extracted ${parsed.claims.length} atomic claim(s).`
   );
-  console.log(`✓ Wrote ${outputPath}`);
+  console.log(
+    `✓ Wrote ${outputPath}`
+  );
 }
 
 main().catch((error) => {
   console.error("");
-  console.error("Claim extraction failed:");
+  console.error(
+    "Claim extraction failed:"
+  );
   console.error(error);
 
   process.exit(1);
