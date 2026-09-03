@@ -1,0 +1,20 @@
+{
+  "id": "british-inquiry-bride-day14",
+
+  "title": "British Wreck Commissioner's Inquiry — Testimony of Harold S. Bride, Day 14",
+
+  "source_type": "testimony",
+
+  "is_primary": true,
+
+  "url": "https://www.titanicinquiry.org/BOTInq/BOTInq14Bride03.php",
+
+  "citation": "British Wreck Commissioner's Inquiry, Day 14, testimony of Harold S. Bride.",
+
+  "default_temporal_context": {
+    "calendar_system": "gregorian",
+    "clock_system": null,
+
+    "notes": "Preserve times exactly as stated in the testimony. Do not assume a clock system, timezone, or UTC offset unless the testimony or other source metadata establishes it."
+  }
+}

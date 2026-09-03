@@ -1,0 +1,27 @@
+{
+  "id": "british-inquiry-bride-day14-q16503-16518",
+
+  "source_id": "british-inquiry-bride-day14",
+
+  "segment_key": "q16503-16518",
+
+  "title": "Bride testimony — Captain Smith orders distress calls and ships respond",
+
+  "locator": "Day 14, questions 16503–16518",
+
+  "sequence_index": 1,
+
+  "content_path": "data/source-material/british-inquiry-bride-day14/q16503-16518.md",
+
+  "content_status": "source_transcription",
+
+  "temporal_context": {
+    "calendar_system": "gregorian",
+    "clock_system": null,
+    "normalization_status": "unresolved",
+
+    "notes": "Testimony concerns events during Titanic's distress communications. Preserve temporal statements from the testimony without assigning a clock basis unless established by the source."
+  },
+
+  "notes": "Verbatim transcript excerpt from Harold S. Bride's testimony before the British Wreck Commissioner's Inquiry."
+}

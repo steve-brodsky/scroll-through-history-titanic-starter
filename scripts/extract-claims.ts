@@ -194,6 +194,45 @@ const claimSchema = {
   required: ["claims"],
 } as const;
 
+function normalizeWhitespace(value: string): string {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function validateEvidence(
+  claims: Array<{
+    statement: string;
+    evidence: string[];
+  }>,
+  sourceText: string
+): void {
+  const normalizedSourceText =
+    normalizeWhitespace(sourceText);
+
+  for (const claim of claims) {
+    for (const evidence of claim.evidence) {
+      const normalizedEvidence =
+        normalizeWhitespace(evidence);
+
+      if (
+        !normalizedEvidence ||
+        !normalizedSourceText.includes(
+          normalizedEvidence
+        )
+      ) {
+        throw new Error(
+          [
+            "Evidence validation failed.",
+            `Claim: ${claim.statement}`,
+            `Evidence: ${evidence}`,
+            "",
+            "Every evidence string must exist verbatim in SOURCE MATERIAL.",
+          ].join("\n")
+        );
+      }
+    }
+  }
+}
+
 async function main() {
   const episodeManifestPath = process.argv[2];
   const segmentManifestPath = process.argv[3];
@@ -419,6 +458,28 @@ However, do not split a statement so aggressively that the resulting claims lose
 
 A claim should represent the smallest useful independently supportable historical assertion.
 
+MULTI-PART ASSERTION RULE:
+
+When a source-supported statement contains multiple independently useful assertions, split them into separate claims when each could be supported or contradicted independently.
+
+Example:
+
+SOURCE MATERIAL:
+
+"She transmitted her position and said she had turned around and was coming as fast as she could."
+
+Prefer:
+
+"She transmitted her position."
+
+"She reported that she had turned around."
+
+"She reported that she was coming as fast as she could."
+
+Do not split merely grammatical components that would lose useful historical meaning.
+
+The goal remains the smallest useful independently supportable claim.
+
 SOURCE RULES:
 
 - Extract historical claims ONLY from SOURCE MATERIAL.
@@ -490,6 +551,119 @@ DO NOT rewrite the claim statement as:
 
 The surrounding date may later be associated with the claim by a separate temporal-normalization stage.
 
+SPEAKER IDENTITY RULE:
+
+Do not identify an unnamed witness, speaker, author, narrator, interviewer, participant, or other actor using SOURCE METADATA or EPISODE CONTEXT.
+
+If SOURCE MATERIAL refers only to:
+
+- "the witness"
+- "I"
+- "we"
+- "the author"
+- "the Captain"
+- "he"
+- "she"
+- "they"
+
+do not replace those references with a canonical identity obtained from metadata.
+
+SOURCE METADATA may identify who a source is attributed to for provenance purposes, but that identity must NOT be inserted into:
+
+- claim statements
+- evidence
+- named_entities
+- knowledge_notes
+
+unless SOURCE MATERIAL itself establishes that identity.
+
+Example:
+
+SOURCE MATERIAL:
+
+"Were you asleep?"
+"Yes."
+
+SOURCE METADATA:
+
+witness = Harold S. Bride
+
+SUPPORTED:
+
+"The witness testified that he had been asleep."
+
+NOT SUPPORTED:
+
+"Harold S. Bride testified that he had been asleep."
+
+The source attribution is preserved separately through provenance.
+
+SUBJECT SCOPE RULE:
+
+Preserve exactly who or what a statement applies to.
+
+Do not broaden a statement about one person, group, object, place, organization, unit, vessel, or time period into a statement about a larger category.
+
+Pay special attention to question-and-answer testimony.
+
+Pronouns such as:
+
+- "I"
+- "you"
+- "we"
+- "my"
+- "our"
+- "your"
+
+must retain their original scope.
+
+Example:
+
+SOURCE MATERIAL:
+
+"Were you sending any messages?"
+"No."
+
+SUPPORTED:
+
+"The witness testified that he was not sending any messages."
+
+NOT SUPPORTED:
+
+"No messages were being sent."
+
+Example:
+
+SOURCE MATERIAL:
+
+"Had your unit crossed the river?"
+"No."
+
+SUPPORTED:
+
+"The witness testified that his unit had not crossed the river."
+
+NOT SUPPORTED:
+
+"No troops had crossed the river."
+
+Example:
+
+SOURCE MATERIAL:
+
+"Did you receive any message?"
+"No."
+
+SUPPORTED:
+
+"The witness testified that he did not receive any message."
+
+NOT SUPPORTED:
+
+"No messages were received."
+
+Never generalize a negative answer beyond the grammatical subject of the question.
+
 EVIDENCE RULE:
 
 The evidence array must contain only evidence derived from SOURCE MATERIAL.
@@ -513,6 +687,50 @@ Evidence should preserve the basis in SOURCE MATERIAL that directly supports the
 Do not fabricate quotations.
 
 Do not present metadata as evidence.
+
+EVIDENCE VERBATIM RULE:
+
+Every string in the evidence array must be copied verbatim from SOURCE MATERIAL.
+
+Do not:
+
+- insert bracketed clarifications
+- resolve pronouns
+- replace pronouns with names
+- expand names
+- canonicalize entities
+- modernize spelling
+- fix grammar
+- rewrite punctuation
+- paraphrase
+- summarize
+- combine separated text into a newly written sentence
+
+Evidence is a direct source excerpt, not explanatory prose.
+
+If one claim requires multiple non-contiguous portions of SOURCE MATERIAL, include multiple evidence strings.
+
+Each evidence string must correspond to actual contiguous text from SOURCE MATERIAL.
+
+The evidence strings for a claim must collectively preserve enough source context to support that claim's meaning.
+
+For question-and-answer material, include a contiguous question-and-answer excerpt when a short answer alone does not establish enough meaning. If a question or answer depends on earlier non-contiguous question-and-answer context, include that earlier context as a separate evidence string. Do not invent words to make a short answer self-contained.
+
+Example:
+
+SOURCE MATERIAL:
+
+"He told him to leave immediately."
+
+ALLOWED EVIDENCE:
+
+"He told him to leave immediately."
+
+NOT ALLOWED:
+
+"[The Captain] told him to leave immediately."
+
+Pronoun resolution belongs in the claim statement when directly entailed, not in evidence.
 
 ENTAILMENT RULE:
 
@@ -1250,6 +1468,12 @@ Extract faithful, atomic historical claims only.
 
   const parsed = JSON.parse(
     response.output_text
+  );
+
+  validateEvidence(parsed.claims, sourceText);
+
+  console.log(
+    "✓ Evidence validation passed."
   );
 
   const extractorVersion =
