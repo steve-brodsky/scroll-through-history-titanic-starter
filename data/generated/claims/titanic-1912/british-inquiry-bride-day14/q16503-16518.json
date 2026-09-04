@@ -3,7 +3,7 @@
   "provenance": {
     "extractor_version": "claim-extractor-v1.0",
     "extraction_model": "gpt-5.6-terra",
-    "extracted_at": "2026-09-03T22:54:08.182Z",
+    "extracted_at": "2026-09-03T23:06:48.723Z",
     "episode_id": "titanic-1912",
     "source_id": "british-inquiry-bride-day14",
     "source_segment_id": "british-inquiry-bride-day14-q16503-16518",
@@ -16,9 +16,9 @@
   },
   "claims": [
     {
-      "candidate_id": "claim_d9d061688eda3e226039a862",
+      "candidate_id": "claim_3144025e9d6cae07af5ed899",
       "extraction_index": 0,
-      "statement": "The witness testified that Mr. Phillips intimated that he thought they had struck something because of a shock that was felt.",
+      "statement": "The witness testified that Mr. Phillips intimated that he thought they had struck something based on feeling a shock.",
       "claim_type": "communication",
       "temporal": {
         "raw_text": null,
@@ -40,7 +40,7 @@
         "Mr. Phillips intimated that he thought we had struck something from the fact of feeling the shock."
       ],
       "confidence": 0.98,
-      "knowledge_notes": "The testimony establishes that Mr. Phillips communicated this impression to the witness; wider knowledge is not established."
+      "knowledge_notes": "The source establishes Mr. Phillips's intimation to the witness; wider knowledge is not established."
     },
     {
       "candidate_id": "claim_013594ebdd7c3dee92b044a6",
@@ -65,7 +65,7 @@
         "16496. You yourself had not felt it?\n- No."
       ],
       "confidence": 0.99,
-      "knowledge_notes": "This claim concerns only the witness's own experience of the shock."
+      "knowledge_notes": "The source establishes only the witness's reported lack of feeling the shock."
     },
     {
       "candidate_id": "claim_91f231895503dee4e20516bf",
@@ -90,12 +90,12 @@
         "16497. Had you been asleep?\n- Yes."
       ],
       "confidence": 0.99,
-      "knowledge_notes": "This claim concerns only the witness."
+      "knowledge_notes": "The source establishes the witness's testimony about his own condition."
     },
     {
-      "candidate_id": "claim_427cb6268513f59d48ef0cd9",
+      "candidate_id": "claim_280676f237ca5e70ecbbd1d2",
       "extraction_index": 3,
-      "statement": "The witness testified that he remained in the room with Mr. Phillips at 12 o'clock.",
+      "statement": "At 12 o'clock, the witness remained in the room with Mr. Phillips.",
       "claim_type": "location",
       "temporal": {
         "raw_text": "at 12 o'clock",
@@ -103,7 +103,7 @@
         "relation": "at",
         "granularity": "hour",
         "certainty": "exact",
-        "calendar_system": "gregorian",
+        "calendar_system": "Gregorian",
         "calendar_system_status": "contextual",
         "clock_system": null,
         "clock_system_status": "unknown",
@@ -117,20 +117,20 @@
         "16498. Did you remain in the room with Mr. Phillips at 12 o'clock?\n- Yes."
       ],
       "confidence": 0.99,
-      "knowledge_notes": "This establishes the witness's presence with Mr. Phillips, not wider knowledge."
+      "knowledge_notes": "The source establishes the witness's presence in the room with Mr. Phillips at the stated time."
     },
     {
-      "candidate_id": "claim_449bf33c0f686be6e70be7d3",
+      "candidate_id": "claim_38dbb564230fabaeb603bc34",
       "extraction_index": 4,
-      "statement": "The witness testified that he was not sending messages at 12 o'clock.",
-      "claim_type": "action",
+      "statement": "At 12 o'clock, the witness testified that he was not sending any messages.",
+      "claim_type": "communication",
       "temporal": {
-        "raw_text": "At that time",
+        "raw_text": "at 12 o'clock",
         "kind": "clock_time",
         "relation": "at",
         "granularity": "hour",
         "certainty": "exact",
-        "calendar_system": "gregorian",
+        "calendar_system": "Gregorian",
         "calendar_system_status": "contextual",
         "clock_system": null,
         "clock_system_status": "unknown",
@@ -142,12 +142,12 @@
         "16499. At that time were you sending any messages?\n- No."
       ],
       "confidence": 0.99,
-      "knowledge_notes": "This negative answer applies to the witness's message-sending only."
+      "knowledge_notes": "The source establishes only that the witness was not sending messages at that time."
     },
     {
-      "candidate_id": "claim_c023a579efd9b52ea6c27609",
+      "candidate_id": "claim_3c79f4394603afbd0119c6e3",
       "extraction_index": 5,
-      "statement": "The witness testified that the Captain came in shortly afterward.",
+      "statement": "The Captain came in shortly afterward.",
       "claim_type": "action",
       "temporal": {
         "raw_text": "shortly afterwards",
@@ -155,49 +155,25 @@
         "relation": "after",
         "granularity": "unknown",
         "certainty": "approximate",
-        "calendar_system": "gregorian",
+        "calendar_system": "Gregorian",
         "calendar_system_status": "contextual",
         "clock_system": null,
         "clock_system_status": "unknown",
-        "anchor_text": "the witness's coming up"
+        "anchor_text": "12 o'clock"
       },
       "location_text": null,
       "named_entities": [],
       "evidence": [
+        "16498. Did you remain in the room with Mr. Phillips at 12 o'clock?\n- Yes.",
         "16500. Did the Captain come in to you?\n- He did shortly afterwards."
       ],
-      "confidence": 0.97,
-      "knowledge_notes": "The testimony establishes that the Captain came to the witness; wider knowledge is not established."
+      "confidence": 0.94,
+      "knowledge_notes": "The source establishes that the Captain came to the witness; wider knowledge is not established."
     },
     {
-      "candidate_id": "claim_e9f8f9ca09591f8b687549b3",
+      "candidate_id": "claim_a2f811bef6d49f4ea6ca5ce1",
       "extraction_index": 6,
-      "statement": "The witness testified that he had not sent messages between his coming up and the Captain's arrival.",
-      "claim_type": "action",
-      "temporal": {
-        "raw_text": "Between the time of your coming up and the Captain coming in to you",
-        "kind": "range",
-        "relation": "between",
-        "granularity": "unknown",
-        "certainty": "bounded",
-        "calendar_system": "gregorian",
-        "calendar_system_status": "contextual",
-        "clock_system": null,
-        "clock_system_status": "unknown",
-        "anchor_text": null
-      },
-      "location_text": null,
-      "named_entities": [],
-      "evidence": [
-        "16501. Between the time of your coming up and the Captain coming in to you had you sent any messages?\n- No."
-      ],
-      "confidence": 0.99,
-      "knowledge_notes": "This negative answer applies to the witness's sending of messages only."
-    },
-    {
-      "candidate_id": "claim_cefff2c69a35b4a0dec7e127",
-      "extraction_index": 7,
-      "statement": "The witness testified that he had not received messages between his coming up and the Captain's arrival.",
+      "statement": "Before the Captain came in, the witness testified that he had not sent any messages after coming up.",
       "claim_type": "communication",
       "temporal": {
         "raw_text": "Between the time of your coming up and the Captain coming in to you",
@@ -205,19 +181,44 @@
         "relation": "between",
         "granularity": "unknown",
         "certainty": "bounded",
-        "calendar_system": "gregorian",
-        "calendar_system_status": "contextual",
+        "calendar_system": null,
+        "calendar_system_status": "unknown",
         "clock_system": null,
         "clock_system_status": "unknown",
-        "anchor_text": null
+        "anchor_text": "the witness's coming up and the Captain coming in"
       },
       "location_text": null,
       "named_entities": [],
       "evidence": [
-        "16502. Or received any?\n- No."
+        "16501. Between the time of your coming up and the Captain coming in to you had you sent any messages?\n- No."
       ],
-      "confidence": 0.96,
-      "knowledge_notes": "In context, this negative answer applies to the witness's receipt of messages only."
+      "confidence": 0.99,
+      "knowledge_notes": "The source establishes only that the witness had not sent messages during this interval."
+    },
+    {
+      "candidate_id": "claim_f0b6063d3fc4d5b4ac69f325",
+      "extraction_index": 7,
+      "statement": "Before the Captain came in, the witness testified that he had not received any messages after coming up.",
+      "claim_type": "communication",
+      "temporal": {
+        "raw_text": "Between the time of your coming up and the Captain coming in to you",
+        "kind": "range",
+        "relation": "between",
+        "granularity": "unknown",
+        "certainty": "bounded",
+        "calendar_system": null,
+        "calendar_system_status": "unknown",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": "the witness's coming up and the Captain coming in"
+      },
+      "location_text": null,
+      "named_entities": [],
+      "evidence": [
+        "16501. Between the time of your coming up and the Captain coming in to you had you sent any messages?\n- No.\n\n16502. Or received any?\n- No."
+      ],
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes only that the witness had not received messages during this interval."
     },
     {
       "candidate_id": "claim_cb55c475d47437ac64623fad",
@@ -242,7 +243,7 @@
         "16503. Then what did the Captain say?\n- The Captain told us he wanted assistance."
       ],
       "confidence": 0.99,
-      "knowledge_notes": "The Captain communicated a desire for assistance to the witness and others denoted by \"us\"; wider dissemination is not established."
+      "knowledge_notes": "The source establishes a communication from the Captain to the witness and others denoted as “us.”"
     },
     {
       "candidate_id": "claim_30e53ed3f2f8dbd02cd78f15",
@@ -267,7 +268,7 @@
         "16504. I am not quite sure that I understand what you mean by that: assistance where?\n- He gave us to understand he wanted us to call C.Q.D."
       ],
       "confidence": 0.98,
-      "knowledge_notes": "The Captain communicated this instruction or intention to the witness and others denoted by \"us\"; wider knowledge is not established."
+      "knowledge_notes": "The source establishes the witness's understanding of the Captain's communication; it does not establish wider knowledge."
     },
     {
       "candidate_id": "claim_31eb6953920ccd0e052e0a47",
@@ -291,12 +292,37 @@
       "evidence": [
         "16505. That is to say that what the Captain wanted you to do was to call for assistance from other vessels?\n- Yes."
       ],
-      "confidence": 0.97,
-      "knowledge_notes": "The testimony establishes the Captain's communicated request as understood by the witness; it does not establish receipt by other vessels."
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes the Captain's stated request as understood by the witness."
+    },
+    {
+      "candidate_id": "claim_878b83f0a34835f72605e6ec",
+      "extraction_index": 11,
+      "statement": "The witness testified that they were to send the signal C.Q.D.",
+      "claim_type": "communication",
+      "temporal": {
+        "raw_text": null,
+        "kind": "unknown",
+        "relation": "none",
+        "granularity": "unknown",
+        "certainty": "unknown",
+        "calendar_system": null,
+        "calendar_system_status": "unknown",
+        "clock_system": null,
+        "clock_system_status": "unknown",
+        "anchor_text": null
+      },
+      "location_text": null,
+      "named_entities": [],
+      "evidence": [
+        "16506. And you were to send out this signal C.Q.D.?\n- Yes."
+      ],
+      "confidence": 0.98,
+      "knowledge_notes": "The source establishes that the witness and others addressed as “you” were to send C.Q.D."
     },
     {
       "candidate_id": "claim_e024f2ffeea6b953898c22ff",
-      "extraction_index": 11,
+      "extraction_index": 12,
       "statement": "The witness testified that the Captain gave Mr. Phillips the latitude and longitude of the \"Titanic.\"",
       "claim_type": "communication",
       "temporal": {
@@ -320,12 +346,12 @@
         "The Captain gave him the latitude and longitude of the \"Titanic,\""
       ],
       "confidence": 0.98,
-      "knowledge_notes": "The testimony establishes that the Captain provided this information to Mr. Phillips; it does not establish any onward transmission or receipt."
+      "knowledge_notes": "The source establishes a communication of the vessel's latitude and longitude from the Captain to Mr. Phillips."
     },
     {
-      "candidate_id": "claim_12ceaecdc419f59504b46480",
-      "extraction_index": 12,
-      "statement": "The witness testified that the Captain told Mr. Phillips to be quick about it, or used words to that effect.",
+      "candidate_id": "claim_b4398f6f2c78914053e800c7",
+      "extraction_index": 13,
+      "statement": "The witness testified that the Captain told Mr. Phillips to be quick about it, or words to that effect.",
       "claim_type": "communication",
       "temporal": {
         "raw_text": null,
@@ -346,13 +372,13 @@
       "evidence": [
         "and told him to be quick about it or words to that effect."
       ],
-      "confidence": 0.94,
-      "knowledge_notes": "The wording is qualified by the witness as \"or words to that effect.\""
+      "confidence": 0.91,
+      "knowledge_notes": "The wording is qualified by the witness as “or words to that effect.”"
     },
     {
-      "candidate_id": "claim_092dadcf6dc47582ebadb62f",
-      "extraction_index": 13,
-      "statement": "The witness testified that Mr. Phillips started to call C.Q.D.",
+      "candidate_id": "claim_91962554e61ac00e7e0f0383",
+      "extraction_index": 14,
+      "statement": "Mr. Phillips started to call C.Q.D.",
       "claim_type": "action",
       "temporal": {
         "raw_text": null,
@@ -374,12 +400,12 @@
         "16509. Then what did Mr. Phillips do?\n- He started to call C.Q.D."
       ],
       "confidence": 0.99,
-      "knowledge_notes": "The testimony establishes Mr. Phillips's action; it does not independently establish receipt of the call."
+      "knowledge_notes": "The source establishes Mr. Phillips's action; wider awareness is not established."
     },
     {
-      "candidate_id": "claim_15bb648f92d9ce73f2997f73",
-      "extraction_index": 14,
-      "statement": "The witness testified that, after the Captain came in, Mr. Phillips sent the first C.Q.D. message.",
+      "candidate_id": "claim_fc73dd0dc61844b63219eb53",
+      "extraction_index": 15,
+      "statement": "After the Captain came in, the first message sent out was C.Q.D. by Mr. Phillips.",
       "claim_type": "communication",
       "temporal": {
         "raw_text": "After the Captain had come in",
@@ -387,8 +413,8 @@
         "relation": "after",
         "granularity": "sequence",
         "certainty": "inferred",
-        "calendar_system": "gregorian",
-        "calendar_system_status": "contextual",
+        "calendar_system": null,
+        "calendar_system_status": "unknown",
         "clock_system": null,
         "clock_system_status": "unknown",
         "anchor_text": "the Captain had come in"
@@ -400,43 +426,43 @@
       "evidence": [
         "16510. After the Captain had come in, the first message was sent out, C.Q.D. was by Mr. Phillips; is that right?\n- Yes."
       ],
-      "confidence": 0.98,
-      "knowledge_notes": "The testimony establishes that Mr. Phillips sent the stated message; it does not establish which parties received it."
+      "confidence": 0.99,
+      "knowledge_notes": "The source establishes that C.Q.D. was the first message sent after the Captain came in and identifies Mr. Phillips as its sender."
     },
     {
-      "candidate_id": "claim_47a20cd455b5ffbfc97e126d",
-      "extraction_index": 15,
-      "statement": "The witness testified that he could not give an accurate estimate of how long had elapsed after he came up at 12 o'clock before the conversation between the Captain and Mr. Phillips.",
-      "claim_type": "communication",
+      "candidate_id": "claim_73c5f24b11aadf29605cbb75",
+      "extraction_index": 16,
+      "statement": "The witness testified that he could not provide an accurate time estimate for the conversation between the Captain and Mr. Phillips after 12 o'clock.",
+      "claim_type": "other",
       "temporal": {
         "raw_text": "after your coming up at 12 o'clock",
         "kind": "relative",
         "relation": "after",
-        "granularity": "unknown",
+        "granularity": "hour",
         "certainty": "unknown",
-        "calendar_system": "gregorian",
+        "calendar_system": "Gregorian",
         "calendar_system_status": "contextual",
         "clock_system": null,
         "clock_system_status": "unknown",
-        "anchor_text": "your coming up at 12 o'clock"
+        "anchor_text": "the witness's coming up at 12 o'clock"
       },
       "location_text": null,
       "named_entities": [
         "Mr. Phillips"
       ],
       "evidence": [
-        "16511. I do not know whether you can help us at all with regard to the time a little more than you have. You have told us you came up at 12 o'clock, and that then you heard this conversation between the Captain and Mr. Phillips. Could you give us any idea of the time - how long had elapsed after your coming up at 12 o'clock, or coming into the room with Mr. Phillips?\n- Not with any accuracy."
+        "16511. I do not know whether you can help us at all with regard to the time a little more than you have. You have told us you came up at 12 o'clock, and that then you heard this conversation between the Captain and Mr. Phillips. Could you give us any idea of the time - how long had elapsed after your coming up at 12 o'clock, or coming into the room with Mr. Phillips?\n- Not with any accuracy.\n\n16512. Give us the best estimate you can?\n- I do not think I could."
       ],
-      "confidence": 0.98,
-      "knowledge_notes": "The witness expressly did not provide an accurate elapsed-time estimate."
+      "confidence": 0.99,
+      "knowledge_notes": "The source establishes the witness's inability to estimate the elapsed time accurately."
     },
     {
-      "candidate_id": "claim_1ea597125dc3ee4a5a315868",
-      "extraction_index": 16,
-      "statement": "The witness identified the \"Frankfurt\" as the first vessel to answer the C.Q.D. call.",
+      "candidate_id": "claim_ba985eb445986b34d249fc0f",
+      "extraction_index": 17,
+      "statement": "The witness recalled that the \"Frankfurt\" was the first vessel to answer the C.Q.D. call.",
       "claim_type": "communication",
       "temporal": {
-        "raw_text": "the first vessel",
+        "raw_text": "the first",
         "kind": "sequence",
         "relation": "before",
         "granularity": "sequence",
@@ -445,7 +471,7 @@
         "calendar_system_status": "unknown",
         "clock_system": null,
         "clock_system_status": "unknown",
-        "anchor_text": "other vessels answering the C.Q.D. call"
+        "anchor_text": "another vessel's answer to the C.Q.D. call"
       },
       "location_text": null,
       "named_entities": [
@@ -454,13 +480,13 @@
       "evidence": [
         "16513. Do you remember what was the first vessel to answer your C.Q.D. call?\n- The \"Frankfurt.\""
       ],
-      "confidence": 0.98,
-      "knowledge_notes": "This is the witness's identification of the first answering vessel."
+      "confidence": 0.97,
+      "knowledge_notes": "This is established as the witness's recollection of the first answer."
     },
     {
-      "candidate_id": "claim_24f9a5ea04e9823d244a12c0",
-      "extraction_index": 17,
-      "statement": "The witness recalled that the \"Frankfurt's\" answer was \"O.K. Stand by.\"",
+      "candidate_id": "claim_6a5cc53e59d8295a3838c4a6",
+      "extraction_index": 18,
+      "statement": "The witness recalled that the \"Frankfurt\" answered, \"O.K. Stand by.\"",
       "claim_type": "communication",
       "temporal": {
         "raw_text": null,
@@ -482,12 +508,12 @@
         "16514. Do you remember what the \"Frankfurt's\" answer was?\n- \"O.K. Stand by.\""
       ],
       "confidence": 0.97,
-      "knowledge_notes": "The content is presented as the witness's recollection of Frankfurt's answer."
+      "knowledge_notes": "This is established as the witness's recollection of Frankfurt's answer."
     },
     {
-      "candidate_id": "claim_93ce732ae034bbf5a4262f47",
-      "extraction_index": 18,
-      "statement": "The witness identified the \"Carpathia\" as the next vessel to answer.",
+      "candidate_id": "claim_3503e1003b205551c17ed2b3",
+      "extraction_index": 19,
+      "statement": "The witness recalled that the \"Carpathia\" was next.",
       "claim_type": "communication",
       "temporal": {
         "raw_text": "the next",
@@ -499,7 +525,7 @@
         "calendar_system_status": "unknown",
         "clock_system": null,
         "clock_system_status": "unknown",
-        "anchor_text": "the \"Frankfurt\" answering the C.Q.D. call"
+        "anchor_text": "the \"Frankfurt\""
       },
       "location_text": null,
       "named_entities": [
@@ -509,12 +535,12 @@
       "evidence": [
         "16516. What was the next?\n- The \"Carpathia.\""
       ],
-      "confidence": 0.95,
-      "knowledge_notes": "In context, the answer identifies the next responding vessel; it is the witness's testimony."
+      "confidence": 0.94,
+      "knowledge_notes": "The source establishes the witness's recollection that Carpathia was next in the discussed sequence."
     },
     {
       "candidate_id": "claim_22edec1838504508941798f1",
-      "extraction_index": 19,
+      "extraction_index": 20,
       "statement": "The witness recalled that the \"Carpathia\" transmitted her position.",
       "claim_type": "communication",
       "temporal": {
@@ -537,11 +563,11 @@
         "16517. What was the message from the \"Carpathia,\" so far as you can recollect it?\n- She transmitted her position"
       ],
       "confidence": 0.96,
-      "knowledge_notes": "The content is qualified as the witness's recollection. The testimony establishes transmission, not wider receipt beyond those addressed as \"us.\""
+      "knowledge_notes": "This is established as the witness's recollection of Carpathia's message."
     },
     {
-      "candidate_id": "claim_5e9da1e14c07a898aa7044f1",
-      "extraction_index": 20,
+      "candidate_id": "claim_b37916e107b97fb175c76e6f",
+      "extraction_index": 21,
       "statement": "The witness recalled that the \"Carpathia\" said she had turned round.",
       "claim_type": "communication",
       "temporal": {
@@ -561,14 +587,14 @@
         "Carpathia"
       ],
       "evidence": [
-        "and told us she had turned round"
+        "She transmitted her position and told us she had turned round"
       ],
-      "confidence": 0.95,
-      "knowledge_notes": "The statement is presented as the witness's recollection of what Carpathia communicated."
+      "confidence": 0.96,
+      "knowledge_notes": "This is established as the witness's recollection of Carpathia's reported action."
     },
     {
       "candidate_id": "claim_3e164679f5c1fe35720fac76",
-      "extraction_index": 21,
+      "extraction_index": 22,
       "statement": "The witness recalled that the \"Carpathia\" said she was coming along as fast as she could.",
       "claim_type": "communication",
       "temporal": {
@@ -590,12 +616,12 @@
       "evidence": [
         "and was coming along as fast as she could."
       ],
-      "confidence": 0.95,
-      "knowledge_notes": "The statement is presented as the witness's recollection of what Carpathia communicated; it does not independently establish her speed or arrival."
+      "confidence": 0.96,
+      "knowledge_notes": "This is established as the witness's recollection of Carpathia's statement."
     },
     {
       "candidate_id": "claim_840d378764f5bafb2924d1f3",
-      "extraction_index": 22,
+      "extraction_index": 23,
       "statement": "The witness testified that the \"Carpathia\" was coming to their assistance.",
       "claim_type": "communication",
       "temporal": {
@@ -617,8 +643,8 @@
       "evidence": [
         "16518. To your assistance?\n- Yes."
       ],
-      "confidence": 0.94,
-      "knowledge_notes": "In context, the witness affirmed that Carpathia was coming to assist them; this does not establish arrival or assistance actually rendered."
+      "confidence": 0.95,
+      "knowledge_notes": "The source establishes the witness's testimony that Carpathia's approach was to assist them."
     }
   ]
 }

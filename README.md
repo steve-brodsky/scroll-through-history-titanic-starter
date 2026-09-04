@@ -35,10 +35,11 @@ missing, the page uses a tiny local development feed.
 
 Create a Supabase project.
 
-Run:
+Run the migrations in order:
 
 ```text
-supabase/migrations/0001_history_core.sql
+supabase/migrations/20260903000000_history_core.sql
+supabase/migrations/20260903000001_claim_ingestion.sql
 ```
 
 in the Supabase SQL editor.
@@ -58,6 +59,21 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 
 The feed code will then attempt to read published posts from Supabase and fall back to the
 local demo if none exist yet.
+
+For the server/admin claim importer, also add:
+
+```text
+SUPABASE_URL=
+SUPABASE_SECRET_KEY=
+```
+
+Older projects may use `SUPABASE_SERVICE_ROLE_KEY` as a fallback for the secret key.
+
+After applying both migrations, import a validated extraction with:
+
+```bash
+npm run import:claims -- data/generated/claims/titanic-1912/british-inquiry-bride-day14/q16503-16518.json
+```
 
 ## 3. Add the OpenAI key for offline generation
 

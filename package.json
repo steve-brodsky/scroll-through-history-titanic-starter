@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "extract:claims": "tsx scripts/extract-claims.ts",
-    "extract:events": "tsx scripts/extract-events.ts"
+    "extract:events": "tsx scripts/extract-events.ts",
+    "import:claims": "tsx scripts/import-claims.ts"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.5",
