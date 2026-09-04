@@ -69,6 +69,16 @@ SUPABASE_SECRET_KEY=
 
 Older projects may use `SUPABASE_SERVICE_ROLE_KEY` as a fallback for the secret key.
 
+The server-backed Claim Review v1 workbench is available at:
+
+```text
+http://localhost:3000/admin/claims
+```
+
+This is currently a development-only administrative route. It keeps the Supabase secret
+in server-only modules, but it must be placed behind authenticated authorization before a
+public production deployment.
+
 After applying both migrations, import a validated extraction with:
 
 ```bash
